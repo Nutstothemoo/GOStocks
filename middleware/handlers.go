@@ -10,6 +10,8 @@ import (
 	"stockapi/models"
 	"strconv"
 
+	_ "github.com/lib/pq"
+
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
@@ -118,7 +120,7 @@ func UpdateStock(w http.ResponseWriter, r *http.Request)  {
 func insertStock(stock models.Stock) (int64, error) {
 	db:= createConnection()
 	defer db.Close()
-	sqlStatement := `INSERT INTO stocks (name, price, company) VALUES ($1, $2, $3) RETURNING stockid`
+	sqlStatement := `INSERT INTO stocks (name, price, company) VALUES ($1, $2, $3) RETURNING stock_id`
 	var id int64
 	err:= db.QueryRow(sqlStatement, stock.Name, stock.Price, stock.Company).Scan(&id)
 	if err != nil {
@@ -150,7 +152,7 @@ func getAllStock() ([]models.Stock, error) {
 func getStock(id int64) (models.Stock, error) {
 	db:= createConnection()
 	defer db.Close()
-	sqlStatement := `SELECT * FROM stocks WHERE stockid=$1`
+	sqlStatement := `SELECT * FROM stocks WHERE stock_id=$1`
 	var stock models.Stock
 	row:= db.QueryRow(sqlStatement, id)
 	err:= row.Scan(&stock.StockID, &stock.Name, &stock.Price, &stock.Company)
@@ -167,7 +169,7 @@ func getStock(id int64) (models.Stock, error) {
 func updateStock(id int64, stock models.Stock) int64 {
 	db:= createConnection()
 	defer db.Close()
-	sqlStatement := `UPDATE stocks SET name=$2, price=$3, company=$4 WHERE stockid=$1`
+	sqlStatement := `UPDATE stocks SET name=$2, price=$3, company=$4 WHERE stock_id=$1`
 	res, err:= db.Exec(sqlStatement, id, stock.Name, stock.Price, stock.Company)
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v", err)
@@ -182,7 +184,7 @@ func updateStock(id int64, stock models.Stock) int64 {
 func deleteStock(id int64) int64 {
 	db:= createConnection()
 	defer db.Close()
-	sqlStatement := `DELETE FROM stocks WHERE stockid=$1`
+	sqlStatement := `DELETE FROM stocks WHERE stock_id=$1`
 	res, err:= db.Exec(sqlStatement, id)
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v", err)

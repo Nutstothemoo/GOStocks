@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"goapi/router"
 	"log"
 	"net/http"
+	"stockapi/router"
 )
 
 func main() {

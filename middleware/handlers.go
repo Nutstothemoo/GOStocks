@@ -2,9 +2,15 @@ package middleware
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
+	"stockapi/models"
+	"strconv"
+
+	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
 
@@ -40,15 +46,38 @@ func CloseConnection(db *sql.DB) {
 	fmt.Println("Successfully closed connection!")
 }
 
-func GetStock(db *sql.DB, id int64) (Stock, error) {
+func GetStock(w http.ResponseWriter, r *http.Request) () {
+	params:= mux.Vars(r)
+	// fmt.Println(params)
+	id, err:= strconv.Atoi(params["id"])
+	if err != nil {
+		log.Fatalf("Unable to convert the string into int.  %v", err)
+	}
 
 }
-func GetAllStock(db *sql.DB) ([]Stock, error) {
+func GetAllStock(db *sql.DB) () {
 
 }
 func CreateStock(w http.ResponseWriter, r *http.Request) (int64, error) {
-	
+	var stock models.Stock
+
+	err:= json.NewDecoder(r.Body).Decode(&stock)
+
+	if err != nil {
+		log.Fatalf("Unable to decode the request body.  %v", err)
+	}
+
+	insertID, err := insertStock(db, stock)
+	if err != nil {
+		log.Fatalf("Unable to execute the query. %v", err)
+	}
+	res:= response{
+		ID: insertID,
+		Message: "Stock created successfully",
+	}
+	json.NewEncoder(w).Encode(res)	
 }
+
 func DeleteStock(db *sql.DB, id int64) (int64, error) {
 
 }

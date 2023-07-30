@@ -1,7 +1,7 @@
 package router
 
 import (
-	"goapi/middleware"
+	"stockapi/middleware"
 
 	"github.com/gorilla/mux"
 )

@@ -1,12 +1,13 @@
 package router
 
 import (
-	"myapi/middleware"
+	"goapi/middleware"
+
 	"github.com/gorilla/mux"
 )
 
 func Router() *mux.Router{
-	router:=mux.NewRouter()
+	router:= mux.NewRouter()
 
 	router.HandleFunc("/api/stock/{id}", middleware.GetStock).Methods("GET", "OPTIONS")
 	router.HandleFunc("/api/getAllStock", middleware.GetAllStock).Methods("GET", "OPTIONS")

@@ -34,4 +34,4 @@ go mod tidy
 go run *.go
 ```
 
-Make sure you have Golang installed. If you don't have Mux installed, run the following command to install it:
+Make sure you have Golang installed. 
